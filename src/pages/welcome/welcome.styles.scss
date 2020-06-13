@@ -1,0 +1,15 @@
+.welcome-page{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 100px;
+
+    .middle{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .btn{
+        margin: auto;
+    }
+}
