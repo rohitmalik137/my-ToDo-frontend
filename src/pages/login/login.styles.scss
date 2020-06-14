@@ -1,6 +1,35 @@
-.login{
+.sign-in__wrapper{
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-top: 100px;
+    margin-top: 75px;
+    
+    .sign-in{
+        width: 380px;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border: 1px solid black;
+        margin: 20px;
+    
+        .title{
+            margin: 10px 0;
+        }
+    
+        .anchor__wrapper{
+            display: flex;
+            justify-content: left;
+            margin-bottom: 45px;
+    
+            .anchor{
+                text-decoration: none;
+                color: rgb(0, 89, 255);
+            }
+        }
+    
+    
+        .buttons{
+            display: flex;
+            justify-content: center;
+        }
+    }
 }
