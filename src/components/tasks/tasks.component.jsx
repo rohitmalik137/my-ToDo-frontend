@@ -8,6 +8,8 @@ class Tasks extends Component {
         super(props);
 
         this.state = {
+            important: false,
+            completed: false,
             tasks: []
         }
     }
@@ -39,7 +41,60 @@ class Tasks extends Component {
             });
         })
         .catch(this.catchError);
-      };
+    };
+
+    updatePostHandler = taskId => {
+        fetch('http://localhost:8080/todo/task/' + taskId, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            important: !this.state.important
+          })
+        })
+        .then(res => {
+            if (res.status === 422) {
+                throw new Error(
+                "Validation failed."
+                );
+            }
+            if (res.status !== 200 && res.status !== 201) {
+                console.log('Error!');
+                throw new Error('Updating failed!');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            console.log(resData);
+            this.setState({ important: !this.state.important });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
+
+    deletePostHandler = taskId => {
+        fetch('http://localhost:8080/todo/task/' + taskId, {
+        method: 'DELETE'
+        })
+        .then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+            throw new Error('Deleting a task failed!');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            console.log(resData);
+            this.setState(prevState => {
+            const updatedTasks = prevState.tasks.filter(p => p._id !== taskId);
+            return { tasks: updatedTasks };
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
 
     render(){
         const { tasks } = this.state;
@@ -51,6 +106,8 @@ class Tasks extends Component {
                     return <SingleTask 
                         key={ task._id }
                         task={task.task}
+                        onDelete={this.deletePostHandler.bind(this, task._id)}
+                        onUpdate={this.updatePostHandler.bind(this, task._id)}
                     />
                 })}
             </div>
