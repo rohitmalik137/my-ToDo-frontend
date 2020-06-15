@@ -1,0 +1,11 @@
+.leftnavigationlink{
+    display: flex;
+    // justify-content: start;
+    align-items: center;
+    text-decoration: none;
+
+    .icon{
+        margin: 0 10px;
+        font-size: x-large;
+    }
+}

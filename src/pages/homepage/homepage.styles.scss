@@ -1,0 +1,17 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+    background-color: #346fef;
+    align-items: center;    
+    padding: 10px 20px;
+    height: 50px;
+    color: white;
+}
+
+.main{
+    display: flex;
+
+    .leftNavigation{
+        width: 300px;
+    }
+}

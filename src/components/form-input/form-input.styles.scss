@@ -34,6 +34,12 @@ $main-color: black;
     }
   }
 
+  .fullWidth{
+    width: 75vw;
+    overflow-x: hidden;
+    padding-bottom: 20px;
+  }
+
   input[type='password'] {
     letter-spacing: 0.3em;
   }

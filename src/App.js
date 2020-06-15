@@ -5,6 +5,8 @@ import './App.css';
 import WelcomePage from './pages/welcome/welcome.component';
 import LoginPage from './pages/login/login.component';
 import SignupPage from './pages/signup/signup.component';
+import HomePage from './pages/homepage/homepage.component';
+// import LeftNavigationLinks from './components/left-navigation-links/left-navigation-links.component';
 
 class App extends React.Component {
   constructor(props){
@@ -142,6 +144,8 @@ class App extends React.Component {
                 />
               )}
             />
+            <Route path='/tasks/' exact component={HomePage} />
+            <Route path='/tasks/:navigate' exact component={HomePage} />
           </Switch>
         </BrowserRouter>
       </div>

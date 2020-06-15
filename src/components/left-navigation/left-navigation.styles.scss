@@ -1,0 +1,21 @@
+.main__wrapper{
+    background-color: rgb(235, 235, 235);
+    height: 90vh;
+    padding-top: 50px;
+
+
+    .left-navigation-links__wrapper{
+        padding: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        
+        &:hover{
+            background-color: rgb(255, 255, 255);
+        }
+
+        a{
+            color: black;
+        }
+    
+    }
+}
