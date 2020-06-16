@@ -48,7 +48,7 @@ class HomePage extends Component{
                     <LeftNavigation />
                 </div>
                 <div className='main__content'>
-                    { this.renderSwitch(this.props.match.params.navigate) }
+                    { this.renderSwitch(window.location.href.split('/')[window.location.href.split('/').length - 1]) }
                 </div>
             </div>
         </div>

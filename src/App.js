@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import React, { Component, Fragment } from 'react';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import './App.css';
 import WelcomePage from './pages/welcome/welcome.component';
@@ -8,7 +8,7 @@ import SignupPage from './pages/signup/signup.component';
 import HomePage from './pages/homepage/homepage.component';
 // import LeftNavigationLinks from './components/left-navigation-links/left-navigation-links.component';
 
-class App extends React.Component {
+class App extends Component {
   constructor(props){
       super(props);
 
@@ -21,6 +21,23 @@ class App extends React.Component {
         authLoading: false,
         error: null
       }
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    const expiryDate = localStorage.getItem('expiryDate');
+    if (!token || !expiryDate) {
+      return;
+    }
+    if (new Date(expiryDate) <= new Date()) {
+      this.logoutHandler();
+      return;
+    }
+    const userId = localStorage.getItem('userId');
+    const remainingMilliseconds =
+      new Date(expiryDate).getTime() - new Date().getTime();
+    this.setState({ isAuth: true, token: token, userId: userId });
+    this.setAutoLogout(remainingMilliseconds);
   }
 
   loginHandler = (event, authData) => {
@@ -119,8 +136,15 @@ class App extends React.Component {
     }, milliseconds);
   };
 
+  logoutHandler = () => {
+    this.setState({ isAuth: false, token: null });
+    localStorage.removeItem('token');
+    localStorage.removeItem('expiryDate');
+    localStorage.removeItem('userId');
+  };
+
   render(){
-    return (
+    let routes = (
       <div className="App">
         <BrowserRouter>
           <Switch>
@@ -144,12 +168,47 @@ class App extends React.Component {
                 />
               )}
             />
-            <Route path='/tasks/' exact component={HomePage} />
-            <Route path='/tasks/:navigate' exact component={HomePage} />
+            <Redirect to="/" />
           </Switch>
         </BrowserRouter>
       </div>
     );
+    if(this.state.isAuth){
+      routes = (
+        <div className='App'>
+          <BrowserRouter>
+            <Switch>
+              <Route 
+                path='/tasks' 
+                exact 
+                render={props => (
+                  <HomePage
+                    userId={ this.state.userId }
+                    token={ this.state.token }
+                  />
+                )}
+              />
+              <Route 
+                path='/tasks/:navigate' 
+                exact 
+                render={props => (
+                  <HomePage
+                    userId={ this.state.userId }
+                    token={ this.state.token }
+                  />
+                )}
+              />
+              <Redirect to="/tasks" />
+            </Switch>
+          </BrowserRouter>
+        </div>
+      )
+    }
+    return (
+      <Fragment>
+        { routes }
+      </Fragment>
+    )
   }
 }
 

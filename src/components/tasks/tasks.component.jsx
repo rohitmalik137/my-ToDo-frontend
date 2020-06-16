@@ -19,11 +19,12 @@ class Tasks extends Component {
     }
 
     getTasks = direction => {
+        // console.log(this.props.token)
         fetch('http://localhost:8080/todo/tasks', {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            // headers: {
+            //     Authorization: 'Bearer ' + this.props.token
+            // }
         })
         .then(res => {
             if (res.status !== 200) {
@@ -43,14 +44,55 @@ class Tasks extends Component {
         .catch(this.catchError);
     };
 
-    updatePostHandler = taskId => {
-        fetch('http://localhost:8080/todo/task/' + taskId, {
+    updateCompletePostHandler = taskId => {
+        const cmplt = this.state.tasks.filter(task => {
+            if(task._id === taskId){
+                return task.task
+            }
+        })
+        fetch('http://localhost:8080/todo/task-complete/' + taskId, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            important: !this.state.important
+            completed: !cmplt[0].completed
+          })
+        })
+        .then(res => {
+            if (res.status === 422) {
+                throw new Error(
+                "Validation failed."
+                );
+            }
+            if (res.status !== 200 && res.status !== 201) {
+                console.log('Error!');
+                throw new Error('Updating failed!');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            console.log(resData);
+            this.setState({ completed: resData.task.completed });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    updateImportantPostHandler = taskId => {
+        const cmplt = this.state.tasks.filter(task => {
+            if(task._id === taskId){
+                return task.task
+            }
+        })
+        fetch('http://localhost:8080/todo/task-important/' + taskId, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            important: !cmplt[0].important
           })
         })
         .then(res => {
@@ -103,12 +145,30 @@ class Tasks extends Component {
             <div>
                 {tasks.map(task => {
                     // console.log(task);
-                    return <SingleTask 
-                        key={ task._id }
-                        task={task.task}
-                        onDelete={this.deletePostHandler.bind(this, task._id)}
-                        onUpdate={this.updatePostHandler.bind(this, task._id)}
-                    />
+                    if(!task.completed){
+                        return <SingleTask 
+                            key={ task._id }
+                            task={task.task}
+                            onDelete={this.deletePostHandler.bind(this, task._id)}
+                            onUpdateImportant={this.updateImportantPostHandler.bind(this, task._id)}
+                            onUpdateComplete = {this.updateCompletePostHandler.bind(this, task._id)}
+                            isImportant = {task.important}
+                        />
+                    }
+                })}
+                <h2>Completed!</h2>
+                {tasks.map(task => {
+                    // console.log(task);
+                    if(task.completed){
+                        return <SingleTask 
+                            key={ task._id }
+                            task={task.task}
+                            onDelete={this.deletePostHandler.bind(this, task._id)}
+                            onUpdateImportant={this.updateImportantPostHandler.bind(this, task._id)}
+                            onUpdateComplete = {this.updateCompletePostHandler.bind(this, task._id)}
+                            isImportant = {task.important}
+                        />
+                    }
                 })}
             </div>
         );

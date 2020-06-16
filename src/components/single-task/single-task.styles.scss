@@ -9,12 +9,33 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
+
+        .complete{
+            border: 1px solid black;
+            color: transparent;
+            font-size: x-small;
+            padding: 2px;
+            width: 20px;
+            height: 20px;
+
+            &:hover{
+                color: black;
+            }
+        }
+
+        .isComplete{
+            color: black;
+        }
     
     }
 
     .right{
         display: flex;
         margin: 0 20px;
+
+        .important{
+            color: rgb(4, 0, 255);
+        }
     }
 
     .icon{
@@ -22,7 +43,7 @@
         // border: 1px solid black;
         padding: 5px;
         border-radius: 50%;
-        font-size: x-large;
+        font-size: larger;
 
         &:hover{
             background-color: rgb(191, 216, 252);
